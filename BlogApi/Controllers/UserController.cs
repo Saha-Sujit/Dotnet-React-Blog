@@ -1,8 +1,12 @@
 namespace User.Controllers
 {
+    using System.Security.Claims;
+    using System.Text;
+    using BCrypt.Net;
     using CommonResponse.Models;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.IdentityModel.Tokens;
     using UserLoginDTO.Models;
     using Users.Data;
     using Users.Models;
@@ -25,7 +29,7 @@ namespace User.Controllers
             var result = new CommonResponse();
             if (existingUser != null)
             {
-                if (existingUser.password == user.password)
+                if (BCrypt.Verify(user.password, existingUser.password))
                 {
                     userResponse.Name = existingUser.Name;
                     userResponse.Id = existingUser.Id;
@@ -55,6 +59,7 @@ namespace User.Controllers
         {
             var existingUser = await _userContext.Users.FirstOrDefaultAsync(item => item.Email == user.Email);
             var userResponse = new UserLoginDTO();
+            var newUserModel = new UserModel();
             var result = new CommonResponse();
             if (existingUser != null)
             {
@@ -63,7 +68,14 @@ namespace User.Controllers
 
                 return BadRequest(result);
             }
-            await _userContext.Users.AddAsync(user);
+
+            string passwordHash = BCrypt.HashPassword(user.password);
+            newUserModel.Id = user.Id;
+            newUserModel.Name = user.Name;
+            newUserModel.Email = user.Email;
+            newUserModel.password = passwordHash;
+
+            await _userContext.Users.AddAsync(newUserModel);
             await _userContext.SaveChangesAsync();
 
             userResponse.Name = user.Name;
