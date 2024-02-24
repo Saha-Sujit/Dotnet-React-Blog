@@ -1,5 +1,6 @@
 namespace User.Controllers
 {
+    using System.IdentityModel.Tokens.Jwt;
     using System.Security.Claims;
     using System.Text;
     using BCrypt.Net;
@@ -16,9 +17,32 @@ namespace User.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserContext _userContext;
-        public UserController(UserContext userContext)
+        private readonly IConfiguration _configuration;
+        public UserController(UserContext userContext, IConfiguration configuration)
         {
             _userContext = userContext;
+            _configuration = configuration;
+        }
+
+        private string CreateToken(UserLogin user)
+        {
+            List<Claim> claims = new List<Claim> {
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds
+            );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
 
         [HttpPost]
@@ -34,6 +58,7 @@ namespace User.Controllers
                     userResponse.Name = existingUser.Name;
                     userResponse.Id = existingUser.Id;
                     userResponse.Email = existingUser.Email;
+                    userResponse.Token = CreateToken(user);
 
                     result.statusCode = 200;
                     result.message = "User is successfully logged in";
