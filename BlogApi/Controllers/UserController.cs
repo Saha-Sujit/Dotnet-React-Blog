@@ -5,6 +5,7 @@ namespace User.Controllers
     using System.Text;
     using BCrypt.Net;
     using CommonResponse.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
@@ -35,8 +36,10 @@ namespace User.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
             var token = new JwtSecurityToken(
+                // issuer: _configuration["JWT:ValidAudience"],
+                // audience: _configuration["JWT:ValidAudience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(10),
                 signingCredentials: creds
             );
 
