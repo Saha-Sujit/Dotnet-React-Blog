@@ -116,5 +116,23 @@ namespace User.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var response = new CommonResponse();
+            var getUsers = _userContext.Users.ToList();
+            var getUsersWithoutPassword = getUsers.Select(user => new UserModel
+            {
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                password = ""
+            });
+            response.data = getUsersWithoutPassword;
+            response.statusCode = 200;
+            response.message = "Here is the all users";
+            return Ok(response);
+        }
     }
 }
