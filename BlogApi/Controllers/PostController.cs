@@ -19,36 +19,26 @@ namespace Post.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPosts()
+        public async Task<IActionResult> GetPosts(int? id, int? userId)
         {
             var response = new CommonResponse();
-            var posts = _postContext.Posts.ToList();
+            IEnumerable<PostModel> posts;
+            if (userId != null)
+            {
+                posts = _postContext.Posts.Where(item => item.UserId == userId).ToList();
+            }
+            else if (id != null)
+            {
+                posts = _postContext.Posts.Where(item => item.Id == id);
+            }
+            else
+            {
+                posts = _postContext.Posts.ToList();
+            }
+
             response.statusCode = 200;
-            response.message = "All Posts are here";
+            response.message = "Your all posts is succesfully fetched";
             response.data = posts;
-
-            return Ok(response);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetPostById(int id)
-        {
-            var response = new CommonResponse();
-            var postById = _postContext.Posts.FirstOrDefault(item => item.Id == id);
-            response.statusCode = 200;
-            response.message = "Post Releted to id";
-            response.data = postById;
-            return Ok(response);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> GetPostsByUserId(int userId)
-        {
-            var response = new CommonResponse();
-            var postById = _postContext.Posts.ToList().FindAll(item => item.UserId == userId);
-            response.statusCode = 200;
-            response.message = "Post Releted to UserId";
-            response.data = postById;
             return Ok(response);
         }
 
