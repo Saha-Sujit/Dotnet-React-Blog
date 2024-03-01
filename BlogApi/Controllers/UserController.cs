@@ -25,10 +25,12 @@ namespace User.Controllers
             _configuration = configuration;
         }
 
-        private string CreateToken(UserLogin user)
+        private string CreateToken(UserModel user)
         {
             List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Email, user!.Email!)
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Email, user.Email!)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
@@ -61,7 +63,7 @@ namespace User.Controllers
                     userResponse.Name = existingUser.Name;
                     userResponse.Id = existingUser.Id;
                     userResponse.Email = existingUser.Email;
-                    userResponse.Token = CreateToken(user);
+                    userResponse.Token = CreateToken(existingUser);
 
                     result.statusCode = 200;
                     result.message = "User is successfully logged in";
@@ -118,7 +120,7 @@ namespace User.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public IActionResult GetUsers()
         {
             var response = new CommonResponse();
             var getUsers = _userContext.Users.ToList();
