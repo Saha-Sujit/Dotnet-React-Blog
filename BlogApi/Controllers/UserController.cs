@@ -29,7 +29,7 @@ namespace User.Controllers
         {
             List<Claim> claims = new List<Claim> {
                 new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Name, user.Name!),
                 new Claim(ClaimTypes.Email, user.Email!)
             };
 

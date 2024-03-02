@@ -20,5 +20,7 @@ namespace Post.Models
         public string? IsPublished { get; set; }
         [Required]
         public string? publishedDate { get; set; }
+        [Required]
+        public int IsPost { get; set; }
     }
 }

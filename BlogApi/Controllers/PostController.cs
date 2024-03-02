@@ -66,7 +66,22 @@ namespace Post.Controllers
             var response = new CommonResponse();
             var existingPost = _postContext.Posts.FirstOrDefault(item => item.Id == post.Id);
 
-            _postContext.Posts.Update(post);
+            if (existingPost == null)
+            {
+                response.statusCode = 404;
+                response.message = "No posts found of the id";
+                return NotFound(response);
+            }
+
+            existingPost.Author = post.Author;
+            existingPost.IsPost = post.IsPost;
+            existingPost.Content = post.Content;
+            existingPost.Description = post.Description;
+            existingPost.IsPublished = post.IsPublished;
+            existingPost.publishedDate = post.publishedDate;
+            existingPost.Title = post.Title;
+
+            _postContext.Posts.Update(existingPost);
             await _postContext.SaveChangesAsync();
 
             response.statusCode = 200;
