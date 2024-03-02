@@ -1,6 +1,7 @@
 namespace Post.Controllers
 {
     using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
     using CommonResponse.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -48,22 +49,30 @@ namespace Post.Controllers
         public async Task<IActionResult> AddPost(PostModel post)
         {
             var response = new CommonResponse();
+
             await _postContext.Posts.AddAsync(post);
             await _postContext.SaveChangesAsync();
 
-            var postFind = _postContext.Posts.ToList().LastOrDefault();
             response.statusCode = 200;
-            response.message = "Your post is Added";
-            response.data = postFind;
+            response.message = "Your Post is Added";
 
             return Ok(response);
         }
 
         [Authorize]
         [HttpPut]
-        public async Task<IActionResult> UpdatePost()
+        public async Task<IActionResult> UpdatePost(PostModel post)
         {
-            return Ok();
+            var response = new CommonResponse();
+            var existingPost = _postContext.Posts.Where(item => item.Id == post.Id);
+
+            _postContext.Posts.Update(post);
+            await _postContext.SaveChangesAsync();
+
+            response.statusCode = 200;
+            response.message = "You Post is updated";
+
+            return Ok(response);
         }
 
         [Authorize]
