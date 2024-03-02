@@ -64,7 +64,7 @@ namespace Post.Controllers
         public async Task<IActionResult> UpdatePost(PostModel post)
         {
             var response = new CommonResponse();
-            var existingPost = _postContext.Posts.Where(item => item.Id == post.Id);
+            var existingPost = _postContext.Posts.FirstOrDefault(item => item.Id == post.Id);
 
             _postContext.Posts.Update(post);
             await _postContext.SaveChangesAsync();
@@ -79,7 +79,16 @@ namespace Post.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            return Ok();
+            var response = new CommonResponse();
+            var existingPost = _postContext.Posts.FirstOrDefault(item => item.Id == id);
+
+            _postContext.Posts.Remove(existingPost!);
+            await _postContext.SaveChangesAsync();
+
+            response.statusCode = 200;
+            response.message = "You Post is Deleted";
+
+            return Ok(response);
         }
     }
 }
