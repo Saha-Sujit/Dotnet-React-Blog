@@ -15,8 +15,6 @@ namespace Post.Models
         [Required]
         public string? Content { get; set; }
         [Required]
-        public string? Author { get; set; }
-        [Required]
         public string? IsPublished { get; set; }
         [Required]
         public string? publishedDate { get; set; }
