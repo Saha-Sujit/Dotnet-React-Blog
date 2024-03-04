@@ -5,6 +5,7 @@ namespace User.Controllers
     using System.Text;
     using BCrypt.Net;
     using CommonResponse.Models;
+    using GetUsersDTO.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -124,12 +125,11 @@ namespace User.Controllers
         {
             var response = new CommonResponse();
             var getUsers = _userContext.Users.ToList();
-            var getUsersWithoutPassword = getUsers.Select(user => new UserModel
+            var getUsersWithoutPassword = getUsers.Select(user => new GetUsersDTO
             {
                 Id = user.Id,
                 Email = user.Email,
                 Name = user.Name,
-                password = ""
             });
             response.data = getUsersWithoutPassword;
             response.statusCode = 200;
