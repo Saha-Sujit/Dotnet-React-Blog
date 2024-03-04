@@ -32,7 +32,7 @@ namespace Post.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPosts(int? id, int? userId)
+        public IActionResult GetPosts(int? id, int? userId, int? categoryId)
         {
             var response = new CommonResponse();
             IEnumerable<PostModel> posts;
@@ -43,6 +43,10 @@ namespace Post.Controllers
             else if (id != null)
             {
                 posts = _postContext.Posts.Where(item => item.Id == id);
+            }
+            else if (categoryId != null)
+            {
+                posts = _postContext.Posts.Where(item => item.CategoryId == categoryId).ToList();
             }
             else
             {
@@ -63,6 +67,15 @@ namespace Post.Controllers
             var userId = GetUserIdFromClaims();
             try
             {
+                var existingCategory = _postContext.Category.FirstOrDefault(item => item.Id == post.CategoryId);
+
+                if (existingCategory == null)
+                {
+                    response.statusCode = 404;
+                    response.message = "No category found of the id";
+                    return NotFound(response);
+                }
+
                 post.UserId = userId;
 
                 await _postContext.Posts.AddAsync(post);
@@ -90,6 +103,14 @@ namespace Post.Controllers
             {
                 var existingPost = _postContext.Posts.FirstOrDefault(item => item.Id == post.Id);
                 var userId = GetUserIdFromClaims();
+                var existingCategory = _postContext.Category.FirstOrDefault(item => item.Id == post.CategoryId);
+
+                if (existingCategory == null)
+                {
+                    response.statusCode = 404;
+                    response.message = "No category found of the id";
+                    return NotFound(response);
+                }
 
                 if (existingPost == null)
                 {
@@ -112,6 +133,7 @@ namespace Post.Controllers
                 existingPost.IsPublished = post.IsPublished;
                 existingPost.publishedDate = post.publishedDate;
                 existingPost.Title = post.Title;
+                existingPost.CategoryId = post.CategoryId;
 
                 _postContext.Posts.Update(existingPost);
                 await _postContext.SaveChangesAsync();
@@ -137,6 +159,13 @@ namespace Post.Controllers
             try
             {
                 var existingPost = _postContext.Posts.FirstOrDefault(item => item.Id == id);
+                if (existingPost == null)
+                {
+                    response.statusCode = 404;
+                    response.message = "No posts found of the id";
+                    return NotFound(response);
+                }
+
                 var userId = GetUserIdFromClaims();
                 if (userId != existingPost!.UserId)
                 {
