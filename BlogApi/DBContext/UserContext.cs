@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Post.Models;
 using Users.Models;
 using Category.Models;
+using Comment.Models;
 
 namespace Users.Data
 {
@@ -14,5 +15,6 @@ namespace Users.Data
         public DbSet<UserModel> Users { get; set; }
         public DbSet<PostModel> Posts { get; set; }
         public DbSet<CategoryModel> Category { get; set; }
+        public DbSet<CommentModel> Comment { get; set; }
     }
 }
