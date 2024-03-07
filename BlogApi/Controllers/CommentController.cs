@@ -72,7 +72,7 @@ namespace Comment.Controllers
             catch (Exception ex)
             {
                 response.statusCode = 500;
-                response.message = "An error occurred while Adding the comment.";
+                response.message = ex.Message;
                 return StatusCode(500, response);
             }
         }

@@ -89,7 +89,7 @@ namespace Post.Controllers
             catch (Exception ex)
             {
                 response.statusCode = 500;
-                response.message = "An error occurred while Adding the post.";
+                response.message = ex.Message;
                 return StatusCode(500, response);
             }
         }
@@ -146,7 +146,7 @@ namespace Post.Controllers
             catch (Exception ex)
             {
                 response.statusCode = 500;
-                response.message = "An error occurred while updating the post.";
+                response.message = ex.Message;
                 return StatusCode(500, response);
             }
         }
@@ -186,7 +186,7 @@ namespace Post.Controllers
             catch (Exception ex)
             {
                 response.statusCode = 500;
-                response.message = "An error occurred while Deleting the post.";
+                response.message = ex.Message;
                 return StatusCode(500, response);
             }
         }
