@@ -3,6 +3,7 @@ using Post.Models;
 using Users.Models;
 using Category.Models;
 using Comment.Models;
+using Media.Models;
 
 namespace Users.Data
 {
@@ -16,5 +17,6 @@ namespace Users.Data
         public DbSet<PostModel> Posts { get; set; }
         public DbSet<CategoryModel> Category { get; set; }
         public DbSet<CommentModel> Comment { get; set; }
+        public DbSet<MediaModel> Media { get; set; }
     }
 }
