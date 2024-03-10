@@ -50,12 +50,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles(new StaticFileOptions
+string imagesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "Images");
+
+if (Directory.Exists(imagesFolderPath))
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "Images")),
-    RequestPath = "/Images"
-});
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(imagesFolderPath),
+        RequestPath = "/Images"
+    });
+}
+else
+{
+    // Log a warning or handle the situation in an appropriate way
+    Console.WriteLine("The 'Images' folder does not exist.");
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

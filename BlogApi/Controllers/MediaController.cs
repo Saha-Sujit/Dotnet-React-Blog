@@ -39,19 +39,39 @@ namespace Media.Controllers
                 Directory.CreateDirectory(folderPath);
             }
 
-            string filePath = Path.Combine(folderPath, fileName);
+            var newFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + fileName;
+
+            string filePath = Path.Combine(folderPath, newFileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return $"Images/{fileName}";
+            return $"Images/{newFileName}";
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllImages()
         {
-            return Ok();
+            var response = new CommonResponse();
+            try
+            {
+                var userId = GetUserIdFromClaims();
+                var images = _mediaContext.Media.Where(item => item.UserId == userId).ToList();
+
+                response.statusCode = 200;
+                response.message = "All images fetched";
+                response.data = images;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.statusCode = 500;
+                response.message = ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
         [Authorize]
@@ -86,10 +106,50 @@ namespace Media.Controllers
             }
         }
 
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteImage(int id)
         {
-            return Ok();
+            var response = new CommonResponse();
+            var userId = GetUserIdFromClaims();
+            var rootFolder = "Images/";
+            var existingFile = _mediaContext.Media.FirstOrDefault(item => item.Id == id);
+            var fileName = existingFile!.ImagePath!.Split("/")[1].ToString();
+
+            try
+            {
+                if (existingFile.UserId != userId)
+                {
+                    response.statusCode = 400;
+                    response.message = "Sorry You are not the owner of this image";
+
+                    return BadRequest(response);
+                }
+
+                if (System.IO.File.Exists(Path.Combine(rootFolder, fileName)))
+                {
+                    System.IO.File.Delete(Path.Combine(rootFolder, fileName));
+
+                    _mediaContext.Media.Remove(existingFile);
+                    await _mediaContext.SaveChangesAsync();
+
+                    response.statusCode = 200;
+                    response.message = "File and data deleted successfully";
+                }
+                else
+                {
+                    response.statusCode = 404;
+                    response.message = "File does not exist";
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.statusCode = 500;
+                response.message = ex.Message;
+                return StatusCode(500, response);
+            }
         }
     }
 }
