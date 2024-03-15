@@ -1,7 +1,8 @@
 import React from "react";
+import Dashboard from "./admin/Pages/Dashboard";
 
 const App = () => {
-  return <div>Basic initial react template.</div>;
+  return <div>Hello</div>;
 };
 
 export default App;
