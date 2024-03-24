@@ -8,6 +8,7 @@ import Error from "./admin/Pages/Error";
 import Posts from "./admin/Pages/Posts";
 import Pages from "./admin/Pages/Pages";
 import Media from "./admin/Pages/Media";
+import ResizablePage from "./admin/AdminComponents/ResizablePage";
 
 const router = createBrowserRouter([
   {
@@ -20,10 +21,14 @@ const router = createBrowserRouter([
     element: (
       <>
         <Header />
-        <Dashboard />
+        <ResizablePage />
       </>
     ),
     children: [
+      {
+        path: "",
+        element: <Dashboard />,
+      },
       {
         path: "posts",
         element: <Posts />,

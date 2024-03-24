@@ -1,13 +1,23 @@
+import sideBarMenus from "../../lib/sidebarMenu";
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <>
-      <Link to={"/dashboard/posts"}>Posts</Link>
-      <Link to={"/dashboard/pages"}>Pages</Link>
-      <Link to={"/dashboard/media"}>Media</Link>
-    </>
+    <div className="flex flex-col">
+      {sideBarMenus.map(({ menuName, linkTo }, index) => (
+        <NavLink
+          to={linkTo}
+          end
+          className={({ isActive }) =>
+            `p-2 ${isActive ? "bg-primary" : "hover:bg-slate-800"}`
+          }
+          key={index}
+        >
+          {menuName}
+        </NavLink>
+      ))}
+    </div>
   );
 };
 
