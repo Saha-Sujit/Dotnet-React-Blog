@@ -1,19 +1,28 @@
+import dashboardIcon from "../assets/icons/dashboard.svg";
+import postsIcon from "../assets/icons/posts.svg";
+import pagesIcon from "../assets/icons/pages.svg";
+import mediaIcon from "../assets/icons/media.svg";
+
 const sideBarMenus = [
   {
     menuName: "Dashboard",
-    linkTo: "/dashboard",
+    menuLink: "/dashboard",
+    menuIcon: dashboardIcon,
   },
   {
     menuName: "Posts",
-    linkTo: "/dashboard/posts",
+    menuLink: "/dashboard/posts",
+    menuIcon: postsIcon,
   },
   {
     menuName: "Pages",
-    linkTo: "/dashboard/pages",
+    menuLink: "/dashboard/pages",
+    menuIcon: pagesIcon,
   },
   {
     menuName: "Media",
-    linkTo: "/dashboard/media",
+    menuLink: "/dashboard/media",
+    menuIcon: mediaIcon,
   },
 ];
 
