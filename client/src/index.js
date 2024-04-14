@@ -9,12 +9,31 @@ import Posts from "./admin/Pages/Posts";
 import Pages from "./admin/Pages/Pages";
 import Media from "./admin/Pages/Media";
 import ResizablePage from "./admin/AdminComponents/ResizablePage";
+import Login from "./admin/Pages/Login";
+import Register from "./admin/Pages/Register";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <>Home Page</>,
     errorElement: <Error />,
+  },
+  {
+    path: "/auth",
+    children: [
+      {
+        path: "",
+        element: <Login />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+    ],
   },
   {
     path: "/dashboard",
