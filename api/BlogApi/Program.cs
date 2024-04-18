@@ -46,9 +46,9 @@ var allowedOrigin = builder.Configuration.GetSection("AllowedOrigins").Get<strin
 // Add services to the container.
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("myAppCors", policy =>
+    options.AddPolicy("blogApiCors", policy =>
     {
-        policy.WithOrigins(allowedOrigin)
+        policy.WithOrigins(allowedOrigin!)
                 .AllowAnyHeader()
                 .AllowAnyMethod();
     });
@@ -81,7 +81,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
-app.UseCors("myAppCors");
+app.UseCors("blogApiCors");
 app.UseAuthorization();
 app.MapControllers();
 
