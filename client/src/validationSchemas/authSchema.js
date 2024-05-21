@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-const authSchema = z.object({
-  username: z
+const loginSchema = z.object({
+  email: z
     .string()
     .min(2, {
       message: "Username must be at least 2 characters.",
@@ -15,4 +15,14 @@ const authSchema = z.object({
   }),
 });
 
-export default authSchema;
+const registerSchema = loginSchema
+  .pick({ email: true, password: true }) // Pick email and password fields
+  .merge(
+    z.object({
+      name: z.string().min(2, {
+        message: "Name must be at least 2 characters.",
+      }),
+    })
+  );
+
+export { loginSchema, registerSchema };

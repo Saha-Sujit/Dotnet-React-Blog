@@ -10,7 +10,10 @@ import Pages from "./admin/Pages/Pages";
 import Media from "./admin/Pages/Media";
 import ResizablePage from "./admin/AdminComponents/ResizablePage";
 import Login from "./admin/Pages/Login";
-import Register from "./admin/Pages/Register";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -31,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: "register",
-        element: <Register />,
+        element: <Login />,
       },
     ],
   },
@@ -71,6 +74,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </React.StrictMode>
 );
