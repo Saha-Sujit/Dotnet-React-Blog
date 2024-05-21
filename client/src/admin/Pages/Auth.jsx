@@ -22,7 +22,7 @@ import {
 } from "../../components/ui/card";
 import { Link, useHref } from "react-router-dom";
 
-const Login = () => {
+const Auth = () => {
   const hrefLocation = useHref();
   const isLogin = hrefLocation === "/auth/login";
   const authEndpoint = isLogin ? "Login" : "Register";
@@ -79,4 +79,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Auth;

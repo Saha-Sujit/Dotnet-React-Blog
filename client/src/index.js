@@ -9,9 +9,9 @@ import Posts from "./admin/Pages/Posts";
 import Pages from "./admin/Pages/Pages";
 import Media from "./admin/Pages/Media";
 import ResizablePage from "./admin/AdminComponents/ResizablePage";
-import Login from "./admin/Pages/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Auth from "./admin/Pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -26,15 +26,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Login />,
+        element: <Auth />,
       },
       {
         path: "login",
-        element: <Login />,
+        element: <Auth />,
       },
       {
         path: "register",
-        element: <Login />,
+        element: <Auth />,
       },
     ],
   },
